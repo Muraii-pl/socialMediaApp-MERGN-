@@ -1,4 +1,4 @@
-const {ApolloServer} = require('apollo-server')
+const  { ApolloServer } = require('apollo-server')
 const gql = require('graphql-tag')
 const mongoose = require('mongoose')
 const dotenv = require('dotenv')
@@ -13,7 +13,7 @@ const typeDefs = require('./graphql/typeDefs')
 const server = new ApolloServer({
     typeDefs,
     resolvers,
-    context:({req}) => ({req})
+    context:({req}) => ({ req })
 })
 
 mongoose.connect(process.env.DB_URL, {useNewUrlParser: true,useUnifiedTopology:true}).then(() => {
