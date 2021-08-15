@@ -1,12 +1,14 @@
-import React, {useState} from 'react';
+import React, {useState,useContext} from 'react';
 import {Button, Form} from 'semantic-ui-react'
 import {useMutation} from "@apollo/client";
 import gql from 'graphql-tag'
 
+import {AuthContext} from "../context/auth";
 import {useForm} from '../util/hooks'
 
 
 const Login = (props) => {
+    const context = useContext(AuthContext)
     const [errors, setErrors] = useState({})
 
     const {onChange, onSubmit, values} = useForm(loginUserCallback, {
@@ -15,11 +17,11 @@ const Login = (props) => {
     })
 
     const [loginUser, {loading}] = useMutation(LOGIN_USER, {
-        update(_, result) {
+        update(_, {data}) {
+            context.login(data.login)
             props.history.push('/')
         },
         onError(err) {
-            console.log(err.graphQLErrors[0].extensions.errors)
             setErrors(err.graphQLErrors[0].extensions.errors)
         },
         variables: values
@@ -72,7 +74,8 @@ const LOGIN_USER = gql`
         $password:String!
     ){
         login(username: $username,password: $password){
-            id 
+            id
+            username
             email 
             createdAt 
             token
