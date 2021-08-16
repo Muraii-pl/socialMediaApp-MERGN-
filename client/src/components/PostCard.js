@@ -1,16 +1,15 @@
-import React from 'react';
+import React,{useContext} from 'react';
 import {Card, Icon, Label, Image, Button} from 'semantic-ui-react'
 import moment from "moment";
 import {Link} from 'react-router-dom'
 
-const PostCard = ({post: {body, createdAt, id, username, likeCount, commentCount, likes}}) => {
 
-    const likePost = () => {
-        console.log('Like post')
-    }
-    const commentOnPost = () => {
-        console.log('Comment on post')
-    }
+import {AuthContext} from "../context/auth";
+import LikeButton from './LikeButton'
+
+const PostCard = ({post: {body, createdAt, id, username, likeCount, commentCount, likes}}) => {
+    const {user} = useContext(AuthContext)
+
 
     return (
         <Card>
@@ -27,23 +26,22 @@ const PostCard = ({post: {body, createdAt, id, username, likeCount, commentCount
                     {body}
                 </Card.Description>
             </Card.Content>
-            <Card.Content>
-                <Button as='div' labelPosition='right' onClick={likePost}>
-                    <Button color='teal'>
-                        <Icon name='heart'/>
-                    </Button>
-                    <Label basic color='teal' pointing='left'>
-                        {likeCount}
-                    </Label>
-                </Button>
-                <Button as='div' labelPosition='left' onClick={commentOnPost}>
-                    <Button color='teal'>
+            <Card.Content extra>
+                <LikeButton user={user} post={{id,likes,likeCount}}/>
+
+                <Button labelPosition='right' as={Link} to={`/post/${id}`}>
+                    <Button color='blue'>
                         <Icon name='comments'/>
                     </Button>
                     <Label basic color='blue' pointing='left'>
                         {commentCount}
                     </Label>
                 </Button>
+                {user && user.username === username && (
+                    <Button as='div' color='red' floated='right' onClick={()=> console.log('Delete post')}>
+                        <Icon name="trash" style={{margin:0}}/>
+                    </Button>
+                )}
             </Card.Content>
         </Card>
     );
