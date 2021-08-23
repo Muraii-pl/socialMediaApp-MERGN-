@@ -22,7 +22,7 @@ const Login = (props) => {
             props.history.push('/')
         },
         onError(err) {
-            setErrors(err.graphQLErrors[0].extensions.errors)
+            setErrors(err.graphQLErrors[0].errors)
         },
         variables: values
     })
